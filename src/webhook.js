@@ -17,7 +17,9 @@ export function metaVerify(req, res) {
 
 // POST /webhook — inbound messages.
 export async function metaWebhook(req, res) {
+  log.info("webhook_hit", { hasSig: !!req.headers["x-hub-signature-256"], hasSecret: !!CONFIG.APP_SECRET });
   if (!verifyMeta(req.rawBody, req.headers["x-hub-signature-256"], CONFIG.APP_SECRET)) {
+    log.warn("meta_signature_fail");
     return res.sendStatus(401);
   }
   res.sendStatus(200); // ack fast (<5s) — Meta retries otherwise
