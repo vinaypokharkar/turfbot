@@ -3,6 +3,10 @@ import { CONFIG } from "./config.js";
 
 const { Pool } = pg;
 
+// pg returns DATE (oid 1082) as a JS Date by default — keep it as a plain
+// 'YYYY-MM-DD' string so our IST formatters work consistently.
+pg.types.setTypeParser(1082, (v) => v);
+
 // Pooled pool (pgBouncer / 6543) — general queries.
 export const pooled = new Pool({ connectionString: CONFIG.DATABASE_URL });
 

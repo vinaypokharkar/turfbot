@@ -24,14 +24,15 @@ export function istDatePlus(n) {
   }).format(base);
 }
 
-// "Tue 30 Jun" from yyyy-mm-dd.
-export function fmtDate(iso) {
+// "Tue 30 Jun" from a yyyy-mm-dd string or a Date.
+export function fmtDate(d) {
+  const date = d instanceof Date ? d : new Date(String(d).slice(0, 10) + "T00:00:00+05:30");
   return new Intl.DateTimeFormat("en-IN", {
     timeZone: TZ,
     weekday: "short",
     day: "2-digit",
     month: "short",
-  }).format(new Date(iso + "T00:00:00+05:30"));
+  }).format(date);
 }
 
 // "7:00 PM" from a pg time string "HH:MM:SS".
