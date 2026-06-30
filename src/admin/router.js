@@ -113,7 +113,12 @@ async function adminCancel(tenant, booking) {
 function normalize(body) {
   const out = { ...body };
   out.razorpay_test = body.razorpay_test === "true" || body.razorpay_test === true;
-  for (const k of ["slot_minutes", "price_paise"]) if (out[k] != null) out[k] = Number(out[k]);
+  // Admin enters rupees; store paise (Razorpay needs paise).
+  if (out.price_rupees != null && out.price_rupees !== "") {
+    out.price_paise = Math.round(Number(out.price_rupees) * 100);
+  }
+  delete out.price_rupees;
+  if (out.slot_minutes != null && out.slot_minutes !== "") out.slot_minutes = Number(out.slot_minutes);
   for (const k of Object.keys(out)) if (out[k] === "") out[k] = null;
   return out;
 }

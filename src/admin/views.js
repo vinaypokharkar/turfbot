@@ -91,7 +91,7 @@ export function tenantFormPage(t) {
 <div class="card"><h2>Turf</h2>
 ${F("Turf name", "turf_name", t.turf_name)}
 <div class="row">${F("Open time", "open_time", t.open_time || "06:00", "time")}${F("Close time", "close_time", t.close_time || "23:00", "time")}</div>
-<div class="row">${F("Slot minutes", "slot_minutes", t.slot_minutes || 60, "number")}${F("Price (paise)", "price_paise", t.price_paise || 90000, "number")}</div>
+<div class="row">${F("Slot minutes", "slot_minutes", t.slot_minutes || 60, "number")}${F("Price (₹)", "price_rupees", t.price_paise ? t.price_paise / 100 : 900, "number")}</div>
 ${F("Address", "address", t.address)}
 ${F("Maps URL", "maps_url", t.maps_url)}
 </div>
