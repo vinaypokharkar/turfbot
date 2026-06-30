@@ -20,7 +20,10 @@ export async function handleInbound(tenant, inbound) {
   const conv = await getState(tenant.id, from);
   let { state, context: ctx } = conv;
 
-  const greet = inbound.text && /^(hi|hello|hey|menu|start|book)\b/i.test(inbound.text.trim());
+  // Only treat plain TEXT as a greeting. Button/list taps carry their title in
+  // `text` (e.g. "Book a Slot") which would otherwise match and loop the menu.
+  const greet =
+    inbound.type === "text" && /^(hi|hello|hey|menu|start)\b/i.test((inbound.text || "").trim());
   if (state === "START" || greet) {
     await send(tenant, M.buildMenu(from));
     return setState(tenant.id, from, "MENU", {});
