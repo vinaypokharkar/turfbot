@@ -60,3 +60,25 @@ export async function freeSlot(slotId) {
     [slotId]
   );
 }
+
+// Admin: counts of free/held/booked for a tenant (future slots only).
+export async function statusSummary(tenantId) {
+  const { rows } = await query(
+    `select status, count(*)::int n from slots
+      where tenant_id = $1 and slot_date >= current_date group by status`,
+    [tenantId]
+  );
+  const out = { free: 0, held: 0, booked: 0 };
+  for (const r of rows) out[r.status] = r.n;
+  return out;
+}
+
+// Admin: force-free any stuck held slots for a tenant.
+export async function freeHeldByTenant(tenantId) {
+  const { rowCount } = await query(
+    `update slots set status='free', held_by=null, hold_expires=null, booking_id=null
+      where tenant_id=$1 and status='held'`,
+    [tenantId]
+  );
+  return rowCount;
+}

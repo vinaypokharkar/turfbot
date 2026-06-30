@@ -18,6 +18,9 @@ export const CONFIG = {
   MAX_DAILY_HOLDS: num(process.env.MAX_DAILY_HOLDS, 10),
   TZ: process.env.TZ || "Asia/Kolkata",
   GRAPH_VERSION: "v21.0",
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "",
+  ADMIN_SECRET: process.env.ADMIN_SECRET || process.env.APP_SECRET || "dev-secret",
+  COOKIE_SECURE: (process.env.COOKIE_SECURE || "true") !== "false",
 };
 
 if (!CONFIG.DATABASE_URL) {

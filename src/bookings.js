@@ -42,6 +42,19 @@ export async function getUpcoming(tenantId, phone) {
   return rows;
 }
 
+// Recent bookings for the admin dashboard (any status), with slot times.
+export async function listByTenant(tenantId, limit = 50) {
+  const { rows } = await query(
+    `select b.id, b.player_name, b.player_phone, b.amount_paise, b.status, b.created_at,
+            s.slot_date, s.start_time, s.end_time
+       from bookings b join slots s on s.id = b.slot_id
+      where b.tenant_id = $1
+      order by b.created_at desc limit $2`,
+    [tenantId, limit]
+  );
+  return rows;
+}
+
 export async function countTodayAttempts(tenantId, phone) {
   const { rows } = await query(
     "select count(*)::int n from bookings where tenant_id = $1 and player_phone = $2 and created_at >= current_date",
